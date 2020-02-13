@@ -31,8 +31,11 @@ phases:
       # - command
   build:
     commands:
-      # - command
-      # - command
+        - echo Docker build
+        - echo building docker image
+        - docker build -t python-app-aws .
+        - docker tag python-app-aws:latest 932283668189.dkr.ecr.us-west-2.amazonaws.com/python-app-aws:latest
+        - docker push 932283668189.dkr.ecr.us-west-2.amazonaws.com/python-app-aws:latest 
   #post_build:
     #commands:
       # - command
