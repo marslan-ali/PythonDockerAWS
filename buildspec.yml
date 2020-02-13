@@ -16,14 +16,17 @@ version: 0.2
   #git-credential-helper: yes
 
 phases:
-  #install:
+  install:
     #If you use the Ubuntu standard image 2.0 or later, you must specify runtime-versions.
     #If you specify runtime-versions and use an image other than Ubuntu standard image 2.0, the build fails.
     #runtime-versions:
       # name: version
       # name: version
-    #commands:
-      # - command
+  commands:
+      - AWS_ACCOUNT_ID=932283668189
+      - AWS_DEFAULT_REGION=us-west-2
+      - IMAGE_REPO_NAME=python-app-aws
+      - IMAGE_TAG=latest
       # - command
   #pre_build:
     #commands:
@@ -33,12 +36,13 @@ phases:
     commands:
         - echo Docker build
         - echo building docker image
-        - docker build -t python-app-aws .
-        - docker tag python-app-aws:latest 932283668189.dkr.ecr.us-west-2.amazonaws.com/python-app-aws:latest
-        - docker push 932283668189.dkr.ecr.us-west-2.amazonaws.com/python-app-aws:latest 
-  #post_build:
-    #commands:
-      # - command
+        - docker build -t $IMAGE_REPO_NAME .
+        - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+        - $(aws ecr get-login --region $AWS_DEFAULT_REGION)
+        - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+  post_build:
+    commands:
+        - printf '[{"name":"your.task.definition.name","imageUri":"%s"}]' $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG > imagedefinitions.json
       # - command
 #reports:
   #report-name-or-arn:
@@ -48,8 +52,8 @@ phases:
     #base-directory: location
     #discard-paths: yes
     #file-format: JunitXml | CucumberJson
-#artifacts:
-  #files:
+artifacts:
+    files: imagedefinitions.json
     # - location
     # - location
   #name: $(date +%Y-%m-%d)
