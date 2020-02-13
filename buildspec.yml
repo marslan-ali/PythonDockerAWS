@@ -1,9 +1,12 @@
 version: 0.2
 
-#env:
-  #variables:
-     # key: "value"
-     # key: "value"
+env:
+  variables:
+    AWS_ACCOUNT_ID: "932283668189"
+    AWS_DEFAULT_REGION: "us-west-2"
+    IMAGE_REPO_NAME: "python-app-aws"
+    IMAGE_TAG: "latest"
+    # key: "value"
   #parameter-store:
      # key: "value"
      # key: "value"
@@ -22,11 +25,8 @@ phases:
     #runtime-versions:
       # name: version
       # name: version
-  commands:
-      - AWS_ACCOUNT_ID=932283668189
-      - AWS_DEFAULT_REGION=us-west-2
-      - IMAGE_REPO_NAME=python-app-aws
-      - IMAGE_TAG=latest
+    #commands:
+      # - command
       # - command
   #pre_build:
     #commands:
@@ -34,15 +34,19 @@ phases:
       # - command
   build:
     commands:
+        - echo Regsion is $AWS_DEFAULT_REGION
         - echo Docker build
         - echo building docker image
-        - docker build -t $IMAGE_REPO_NAME .
+        - docker build -t python-app-aws .
         - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+        - docker push 932283668189.dkr.ecr.us-west-2.amazonaws.com/python-app-aws:latest 
         - $(aws ecr get-login --region $AWS_DEFAULT_REGION)
         - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
-  post_build:
-    commands:
-        - printf '[{"name":"your.task.definition.name","imageUri":"%s"}]' $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG > imagedefinitions.json
+      # - command
+      # - command
+  #post_build:
+    #commands:
+      # - command
       # - command
 #reports:
   #report-name-or-arn:
@@ -52,8 +56,8 @@ phases:
     #base-directory: location
     #discard-paths: yes
     #file-format: JunitXml | CucumberJson
-artifacts:
-    files: imagedefinitions.json
+#artifacts:
+  #files:
     # - location
     # - location
   #name: $(date +%Y-%m-%d)
