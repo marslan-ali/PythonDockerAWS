@@ -1,23 +1,21 @@
-[
-    {
-       "taskDefinition":{
-          "family":"python-aws-task",
-          "containerDefinitions":[
-             {
-                "name":"python-aws-task",
-                "image":"932283668189.dkr.ecr.us-west-2.amazonaws.com/python-app-aws:latest",
-                "cpu":100,
-                "portMappings":[
-                   {
-                      "protocol":"tcp",
-                      "containerPort":80,
-                      "hostPort":80
-                   }
-                ],
-                "memory":128,
-                "essential":true
-             }
-          ]
-       }
+{
+    "taskDefinition": {
+      "family": "hello-world",
+      "containerDefinitions": [
+        {
+          "name": "python-app-aws-container",
+          "image": "932283668189.dkr.ecr.us-west-2.amazonaws.com/python-app-aws:latest",
+          "cpu": 100,
+          "portMappings": [
+            {
+              "protocol": "tcp",
+              "containerPort": 80,
+              "hostPort": 80
+            }
+          ],
+          "memory": 128,
+          "essential": true
+        }
+      ]
     }
- ]
+  }
