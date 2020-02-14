@@ -55,8 +55,8 @@ phases:
     #base-directory: location
     #discard-paths: yes
     #file-format: JunitXml | CucumberJson
-#artifacts:
-  #files: imagedefinitions.json
+artifacts:
+  files: imagedefinitions.json
   #name: s3-to-s3-latest-build.zip
   #discard-paths: yes
   #base-directory: location
